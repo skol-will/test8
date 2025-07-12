@@ -128,7 +128,7 @@
   </div>
   <div id="stage2">
     <div class="stage-title">Select 5 Wildcard Teams</div>
-    <!-- Wildcard Selection Grid Here -->
+    <div class="team-grid" id="wildcardGrid"></div>
   </div>
 
   <div class="button-container">
@@ -137,17 +137,25 @@
   </div>
 
   <script>
-    // Placeholder for your JavaScript logic to toggle between stages
     const continueBtn = document.getElementById("continueBtn");
     const backBtn = document.getElementById("backBtn");
     const stage1 = document.getElementById("stage1");
     const stage2 = document.getElementById("stage2");
+    const wildcardGrid = document.getElementById("wildcardGrid");
+    const selectedDivisionWinners = new Set();
+    const wildcardSelections = new Set();
 
     continueBtn.addEventListener("click", () => {
+      if (selectedDivisionWinners.size !== 3) {
+        alert("Please select one winner from each division before continuing.");
+        return;
+      }
+
       stage1.style.display = "none";
       stage2.style.display = "block";
       continueBtn.style.display = "none";
       backBtn.style.display = "inline-block";
+      populateWildcards();
     });
 
     backBtn.addEventListener("click", () => {
@@ -156,6 +164,71 @@
       continueBtn.style.display = "inline-block";
       backBtn.style.display = "none";
     });
+
+    function populateWildcards() {
+      wildcardGrid.innerHTML = "";
+      document.querySelectorAll(".team-card").forEach(card => {
+        const teamName = card.getAttribute("data-name");
+        if (!selectedDivisionWinners.has(teamName)) {
+          const clone = card.cloneNode(true);
+          clone.classList.remove("disabled");
+          clone.classList.remove("selected");
+          clone.addEventListener("click", () => toggleWildcardSelection(clone));
+          wildcardGrid.appendChild(clone);
+        }
+      });
+    }
+
+    function toggleWildcardSelection(card) {
+      const name = card.getAttribute("data-name");
+      if (card.classList.contains("selected")) {
+        card.classList.remove("selected");
+        wildcardSelections.delete(name);
+      } else {
+        if (wildcardSelections.size < 5) {
+          card.classList.add("selected");
+          wildcardSelections.add(name);
+        } else {
+          alert("You can only select up to 5 wildcard teams.");
+        }
+      }
+    }
+
+    // Division winner selection logic
+    document.querySelectorAll(".team-card").forEach(card => {
+      card.addEventListener("click", () => {
+        const division = card.getAttribute("data-division");
+        const name = card.getAttribute("data-name");
+
+        if (card.classList.contains("selected")) {
+          card.classList.remove("selected");
+          selectedDivisionWinners.delete(name);
+          enableDivision(division);
+        } else {
+          const alreadySelected = Array.from(document.querySelectorAll(`.team-card[data-division='${division}'].selected`));
+          if (alreadySelected.length === 0) {
+            card.classList.add("selected");
+            selectedDivisionWinners.add(name);
+            disableOthersInDivision(division, name);
+          }
+        }
+      });
+    });
+
+    function disableOthersInDivision(division, selectedName) {
+      document.querySelectorAll(`.team-card[data-division='${division}']`).forEach(card => {
+        const name = card.getAttribute("data-name");
+        if (name !== selectedName) {
+          card.classList.add("disabled");
+        }
+      });
+    }
+
+    function enableDivision(division) {
+      document.querySelectorAll(`.team-card[data-division='${division}']`).forEach(card => {
+        card.classList.remove("disabled");
+      });
+    }
   </script>
 </body>
 </html>
