@@ -1,234 +1,444 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IFL Playoff Predictor 2025/26</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Rajdhani', sans-serif;
-      background-color: #0e0e1a;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>IFL Playoff Predictor 2025/26 Season</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap" rel="stylesheet" />
+<style>
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    margin: 0;
+    padding: 10px;
+    background: #111;
+    color: #fff;
+    text-align: center;
+  }
 
-    h1 {
-      display: flex;
-      align-items: center;
-      font-size: 28px;
-      margin-top: 20px;
-    }
+  h1 img {
+    vertical-align: middle;
+    height: 40px;
+    margin-right: 10px;
+  }
 
-    h1 img {
-      height: 40px;
-      margin-right: 10px;
-    }
+  h1, h2 {
+    margin: 20px 0;
+  }
 
-    .stage-title {
-      font-size: 24px;
-      margin: 20px 0;
-      text-align: center;
-    }
+  .division-container {
+    margin-bottom: 40px;
+  }
 
-    .division-section {
-      margin-bottom: 30px;
-      text-align: center;
-    }
+  .division-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
 
-    .division-section h2 {
-      font-size: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 10px;
-    }
+  .division-title img {
+    height: 30px;
+  }
 
-    .division-section h2 img {
-      height: 30px;
-      margin-left: 10px;
-    }
+  .team-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
 
-    .team-grid {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
+  .team-card {
+    position: relative;
+    width: 140px;
+    height: 40px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+  }
 
+  .team-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .team-card span {
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    right: 0;
+    text-shadow: 0 0 4px #000;
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.9rem;
+    background: rgba(0,0,0,0.3);
+    padding: 2px 4px;
+  }
+
+  .team-card.selected {
+    outline: 3px solid #00BFFF;
+    transform: scale(1.05);
+  }
+
+  .team-card.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  #continue-btn, #back-btn {
+    background: #00BFFF;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    margin-top: 20px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  #continue-btn:hover, #back-btn:hover {
+    background: #0099cc;
+  }
+
+  #continue-btn:disabled {
+    background: #555;
+    cursor: not-allowed;
+  }
+
+  /* Stage 2 overlay */
+  #stage2 {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.95);
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  #stage2 h2 {
+    margin-bottom: 20px;
+  }
+
+  #wildcard-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    max-width: 500px;
+    margin: 0 auto 20px auto;
+  }
+
+  #wildcard-list .team-card {
+    flex: 0 0 140px;
+  }
+
+  #selected-count {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 500px) {
     .team-card {
-      width: 144px;
-      height: 40px;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-      cursor: pointer;
-      border-radius: 6px;
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
-      transition: transform 0.2s, opacity 0.2s;
+      width: 120px;
+      height: 36px;
     }
 
-    .team-card:hover {
-      transform: scale(1.05);
+    .team-card span {
+      font-size: 0.8rem;
     }
 
-    .team-card.disabled {
-      opacity: 0.3;
-      pointer-events: none;
+    #wildcard-list .team-card {
+      flex: 0 0 120px;
     }
-
-    .team-name {
-      position: absolute;
-      width: 100%;
-      text-align: center;
-      top: 50%;
-      transform: translateY(-50%);
-      color: white;
-      text-shadow: 0 0 4px black;
-      font-weight: bold;
-    }
-
-    .selected {
-      outline: 3px solid #00aaff;
-    }
-
-    .button-container {
-      margin-top: 20px;
-    }
-
-    .button-container button {
-      background-color: #0077cc;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .button-container button:hover {
-      background-color: #005fa3;
-    }
-
-    #stage2 {
-      display: none;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <h1><img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752231585/ifl-logo_q9fmai.png" alt="IFL Logo" />IFL Playoff Predictor 2025/26</h1>
-  <div id="stage1">
-    <div class="stage-title">Select One Division Winner from Each Division</div>
-    <!-- Division Sections Here (re-insert your stage 1 code with correct structure) -->
-  </div>
-  <div id="stage2">
-    <div class="stage-title">Select 5 Wildcard Teams</div>
-    <div class="team-grid" id="wildcardGrid"></div>
+
+<h1>
+  <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752231585/ifl-logo_q9fmai.png" alt="IFL Logo" />
+  IFL Playoff Predictor 2025/26 Season
+</h1>
+
+<!-- Stage 1 -->
+<div id="stage1">
+  <h2>Select a Division Winner from Each Division</h2>
+
+  <!-- World East -->
+  <div class="division-container" data-division="world-east">
+    <div class="division-title">
+      <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752231585/world-east_dzwpw9.png" alt="World East Logo" />
+      World East Division
+    </div>
+    <div class="team-list">
+      <div class="team-card" data-team="Australia Whites" data-division="world-east" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182184/australia-whites_h9o2vz.png" alt="Australia Whites" />
+        <span>Australia Whites</span>
+      </div>
+      <div class="team-card" data-team="Italia Bulls" data-division="world-east" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/italia-bulls_aocvis.png" alt="Italia Bulls" />
+        <span>Italia Bulls</span>
+      </div>
+      <div class="team-card" data-team="Belarus Barbarians" data-division="world-east" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/belarus-barbarians_ydx3kz.png" alt="Belarus Barbarians" />
+        <span>Belarus Barbarians</span>
+      </div>
+      <div class="team-card" data-team="Singapore Smelters" data-division="world-east" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/singapore-smelters_qn3ges.png" alt="Singapore Smelters" />
+        <span>Singapore Smelters</span>
+      </div>
+      <div class="team-card" data-team="South Korea Deers" data-division="world-east" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/southkorea-deers_jbt02f.png" alt="South Korea Deers" />
+        <span>South Korea Deers</span>
+      </div>
+      <div class="team-card" data-team="Poland Panthers" data-division="world-east" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/poland-panthers_ppg3zr.png" alt="Poland Panthers" />
+        <span>Poland Panthers</span>
+      </div>
+    </div>
   </div>
 
-  <div class="button-container">
-    <button id="continueBtn">Continue to Wildcards</button>
-    <button id="backBtn" style="display: none;">Back to Division Winners</button>
+  <!-- World Central -->
+  <div class="division-container" data-division="world-central">
+    <div class="division-title">
+      <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752231585/world-central_okus8o.png" alt="World Central Logo" />
+      World Central Division
+    </div>
+    <div class="team-list">
+      <div class="team-card" data-team="Germany Cavaliers" data-division="world-central" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/germany-cavaliers_qrcojc.png" alt="Germany Cavaliers" />
+        <span>Germany Cavaliers</span>
+      </div>
+      <div class="team-card" data-team="UK 3 Lions" data-division="world-central" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/uk-tri-lions_kyixfr.png" alt="UK 3 Lions" />
+        <span>UK 3 Lions</span>
+      </div>
+      <div class="team-card" data-team="Finland Frigate" data-division="world-central" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/finland-frigate_u7rjbj.png" alt="Finland Frigate" />
+        <span>Finland Frigate</span>
+      </div>
+      <div class="team-card" data-team="Belgium Bulldogs" data-division="world-central" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/belgium-bulldogs_hrx8td.png" alt="Belgium Bulldogs" />
+        <span>Belgium Bulldogs</span>
+      </div>
+      <div class="team-card" data-team="Holland Hornets" data-division="world-central" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/holland-hornets_ilzroo.png" alt="Holland Hornets" />
+        <span>Holland Hornets</span>
+      </div>
+      <div class="team-card" data-team="South Africa Silverbacks" data-division="world-central" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/southafrica-silverbaks_x6but2.png" alt="South Africa Silverbacks" />
+        <span>South Africa Silverbacks</span>
+      </div>
+    </div>
   </div>
 
-  <script>
-    const continueBtn = document.getElementById("continueBtn");
-    const backBtn = document.getElementById("backBtn");
-    const stage1 = document.getElementById("stage1");
-    const stage2 = document.getElementById("stage2");
-    const wildcardGrid = document.getElementById("wildcardGrid");
-    const selectedDivisionWinners = new Set();
-    const wildcardSelections = new Set();
+  <!-- World West -->
+  <div class="division-container" data-division="world-west">
+    <div class="division-title">
+      <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752231585/world-west_ie8gga.png" alt="World West Logo" />
+      World West Division
+    </div>
+    <div class="team-list">
+      <div class="team-card" data-team="USA Drones" data-division="world-west" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182187/usa-drones_doeba8.png" alt="USA Drones" />
+        <span>USA Drones</span>
+      </div>
+      <div class="team-card" data-team="Jamaica Thunder" data-division="world-west" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/jamaica-thunder_ogo7aj.png" alt="Jamaica Thunder" />
+        <span>Jamaica Thunder</span>
+      </div>
+      <div class="team-card" data-team="Rwanda Raiders" data-division="world-west" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/rwanda-raiders_aqtgu7.png" alt="Rwanda Raiders" />
+        <span>Rwanda Raiders</span>
+      </div>
+      <div class="team-card" data-team="Egypt Pharaohs" data-division="world-west" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/egypt-pharaohs_ycglpl.png" alt="Egypt Pharaohs" />
+        <span>Egypt Pharaohs</span>
+      </div>
+      <div class="team-card" data-team="Peru Piranhas" data-division="world-west" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/peru-piranhas_yueas6.png" alt="Peru Piranhas" />
+        <span>Peru Piranhas</span>
+      </div>
+      <div class="team-card" data-team="Brazil Hummingbirds" data-division="world-west" tabindex="0">
+        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/brazil-hummingbirds_dras9r.png" alt="Brazil Hummingbirds" />
+        <span>Brazil Hummingbirds</span>
+      </div>
+    </div>
+  </div>
 
-    continueBtn.addEventListener("click", () => {
-      if (selectedDivisionWinners.size !== 3) {
-        alert("Please select one winner from each division before continuing.");
-        return;
+  <button id="continue-btn" disabled>Continue to Wildcards</button>
+</div>
+
+<!-- Stage 2 Overlay -->
+<div id="stage2">
+  <h2>Select 5 Wildcard Teams</h2>
+  <div id="selected-count">Selected: 0 / 5</div>
+  <div id="wildcard-list"></div>
+  <button id="back-btn">Back to Division Winners</button>
+</div>
+
+<script>
+  const divisions = ['world-east', 'world-central', 'world-west'];
+  let selectedWinners = {
+    'world-east': null,
+    'world-central': null,
+    'world-west': null
+  };
+
+  const continueBtn = document.getElementById('continue-btn');
+  const stage1 = document.getElementById('stage1');
+  const stage2 = document.getElementById('stage2');
+  const wildcardList = document.getElementById('wildcard-list');
+  const selectedCountEl = document.getElementById('selected-count');
+  const backBtn = document.getElementById('back-btn');
+
+  // Selectable team cards in Stage 1
+  const teamCards = document.querySelectorAll('#stage1 .team-card');
+
+  // --- Stage 1: Division Winner Selection ---
+  teamCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const division = card.dataset.division;
+
+      if (selectedWinners[division] === card) {
+        // Deselect if clicked again
+        card.classList.remove('selected');
+        selectedWinners[division] = null;
+      } else {
+        // Deselect previous winner in this division
+        if (selectedWinners[division]) {
+          selectedWinners[division].classList.remove('selected');
+        }
+        // Select new winner
+        selectedWinners[division] = card;
+        card.classList.add('selected');
       }
 
-      stage1.style.display = "none";
-      stage2.style.display = "block";
-      continueBtn.style.display = "none";
-      backBtn.style.display = "inline-block";
-      populateWildcards();
-    });
-
-    backBtn.addEventListener("click", () => {
-      stage1.style.display = "block";
-      stage2.style.display = "none";
-      continueBtn.style.display = "inline-block";
-      backBtn.style.display = "none";
-    });
-
-    function populateWildcards() {
-      wildcardGrid.innerHTML = "";
-      document.querySelectorAll(".team-card").forEach(card => {
-        const teamName = card.getAttribute("data-name");
-        if (!selectedDivisionWinners.has(teamName)) {
-          const clone = card.cloneNode(true);
-          clone.classList.remove("disabled");
-          clone.classList.remove("selected");
-          clone.addEventListener("click", () => toggleWildcardSelection(clone));
-          wildcardGrid.appendChild(clone);
+      // Disable other cards in this division if one selected
+      teamCards.forEach(c => {
+        if (c.dataset.division === division && c !== selectedWinners[division]) {
+          c.classList.toggle('disabled', !!selectedWinners[division]);
         }
       });
-    }
 
-    function toggleWildcardSelection(card) {
-      const name = card.getAttribute("data-name");
-      if (card.classList.contains("selected")) {
-        card.classList.remove("selected");
-        wildcardSelections.delete(name);
-      } else {
-        if (wildcardSelections.size < 5) {
-          card.classList.add("selected");
-          wildcardSelections.add(name);
-        } else {
-          alert("You can only select up to 5 wildcard teams.");
-        }
+      // Enable continue button only if all divisions have a selection
+      continueBtn.disabled = !divisions.every(div => selectedWinners[div]);
+    });
+
+    // Keyboard accessibility
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.click();
       }
-    }
+    });
+  });
 
-    // Division winner selection logic
-    document.querySelectorAll(".team-card").forEach(card => {
-      card.addEventListener("click", () => {
-        const division = card.getAttribute("data-division");
-        const name = card.getAttribute("data-name");
+  // --- Stage 2: Wildcard Selection ---
 
-        if (card.classList.contains("selected")) {
-          card.classList.remove("selected");
-          selectedDivisionWinners.delete(name);
-          enableDivision(division);
+  // All teams data: division + name + logo (flatten all teams here for wildcard)
+  const allTeams = [
+    // World East
+    { division: 'world-east', name: 'Australia Whites', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182184/australia-whites_h9o2vz.png' },
+    { division: 'world-east', name: 'Italia Bulls', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/italia-bulls_aocvis.png' },
+    { division: 'world-east', name: 'Belarus Barbarians', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/belarus-barbarians_ydx3kz.png' },
+    { division: 'world-east', name: 'Singapore Smelters', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/singapore-smelters_qn3ges.png' },
+    { division: 'world-east', name: 'South Korea Deers', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/southkorea-deers_jbt02f.png' },
+    { division: 'world-east', name: 'Poland Panthers', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/poland-panthers_ppg3zr.png' },
+
+    // World Central
+    { division: 'world-central', name: 'Germany Cavaliers', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/germany-cavaliers_qrcojc.png' },
+    { division: 'world-central', name: 'UK 3 Lions', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/uk-tri-lions_kyixfr.png' },
+    { division: 'world-central', name: 'Finland Frigate', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/finland-frigate_u7rjbj.png' },
+    { division: 'world-central', name: 'Belgium Bulldogs', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/belgium-bulldogs_hrx8td.png' },
+    { division: 'world-central', name: 'Holland Hornets', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/holland-hornets_ilzroo.png' },
+    { division: 'world-central', name: 'South Africa Silverbacks', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/southafrica-silverbaks_x6but2.png' },
+
+    // World West
+    { division: 'world-west', name: 'USA Drones', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182187/usa-drones_doeba8.png' },
+    { division: 'world-west', name: 'Jamaica Thunder', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/jamaica-thunder_ogo7aj.png' },
+    { division: 'world-west', name: 'Rwanda Raiders', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/rwanda-raiders_aqtgu7.png' },
+    { division: 'world-west', name: 'Egypt Pharaohs', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/egypt-pharaohs_ycglpl.png' },
+    { division: 'world-west', name: 'Peru Piranhas', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/peru-piranhas_yueas6.png' },
+    { division: 'world-west', name: 'Brazil Hummingbirds', logo: 'https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/brazil-hummingbirds_dras9r.png' },
+  ];
+
+  continueBtn.addEventListener('click', () => {
+    stage1.style.display = 'none';
+    stage2.style.display = 'block';
+    renderWildcardList();
+  });
+
+  backBtn.addEventListener('click', () => {
+    stage2.style.display = 'none';
+    stage1.style.display = 'block';
+  });
+
+  let selectedWildcards = new Set();
+
+  function renderWildcardList() {
+    wildcardList.innerHTML = '';
+    selectedWildcards.clear();
+
+    // Filter out division winners
+    const divisionWinnersNames = Object.values(selectedWinners).map(card => card.dataset.team);
+
+    allTeams.forEach(team => {
+      if (divisionWinnersNames.includes(team.name)) return; // exclude division winners
+
+      const card = document.createElement('div');
+      card.className = 'team-card';
+      card.setAttribute('tabindex', '0');
+      card.dataset.team = team.name;
+      card.dataset.division = team.division;
+
+      const img = document.createElement('img');
+      img.src = team.logo;
+      img.alt = team.name;
+
+      const span = document.createElement('span');
+      span.textContent = team.name;
+
+      card.appendChild(img);
+      card.appendChild(span);
+
+      card.addEventListener('click', () => {
+        if (selectedWildcards.has(team.name)) {
+          selectedWildcards.delete(team.name);
+          card.classList.remove('selected');
         } else {
-          const alreadySelected = Array.from(document.querySelectorAll(`.team-card[data-division='${division}'].selected`));
-          if (alreadySelected.length === 0) {
-            card.classList.add("selected");
-            selectedDivisionWinners.add(name);
-            disableOthersInDivision(division, name);
+          if (selectedWildcards.size < 5) {
+            selectedWildcards.add(team.name);
+            card.classList.add('selected');
+          } else {
+            alert('You can only select 5 wildcards.');
           }
         }
+        updateSelectedCount();
       });
-    });
 
-    function disableOthersInDivision(division, selectedName) {
-      document.querySelectorAll(`.team-card[data-division='${division}']`).forEach(card => {
-        const name = card.getAttribute("data-name");
-        if (name !== selectedName) {
-          card.classList.add("disabled");
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.click();
         }
       });
-    }
 
-    function enableDivision(division) {
-      document.querySelectorAll(`.team-card[data-division='${division}']`).forEach(card => {
-        card.classList.remove("disabled");
-      });
-    }
-  </script>
+      wildcardList.appendChild(card);
+    });
+
+    updateSelectedCount();
+  }
+
+  function updateSelectedCount() {
+    selectedCountEl.textContent = `Selected: ${selectedWildcards.size} / 5`;
+  }
+</script>
+
 </body>
 </html>
