@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFL Playoff Predictor 2025/26</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Rajdhani', sans-serif;
+      background-color: #0e0e1a;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      display: flex;
+      align-items: center;
+      font-size: 28px;
+      margin-top: 20px;
+    }
+
+    h1 img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .stage-title {
+      font-size: 24px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .division-section {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .division-section h2 {
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .division-section h2 img {
+      height: 30px;
+      margin-left: 10px;
+    }
+
+    .team-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .team-card {
+      width: 144px;
+      height: 40px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      cursor: pointer;
+      border-radius: 6px;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .team-card:hover {
+      transform: scale(1.05);
+    }
+
+    .team-card.disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .team-name {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      text-shadow: 0 0 4px black;
+      font-weight: bold;
+    }
+
+    .selected {
+      outline: 3px solid #00aaff;
+    }
+
+    .button-container {
+      margin-top: 20px;
+    }
+
+    .button-container button {
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .button-container button:hover {
+      background-color: #005fa3;
+    }
+
+    #stage2 {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1><img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752231585/ifl-logo_q9fmai.png" alt="IFL Logo" />IFL Playoff Predictor 2025/26</h1>
+  <div id="stage1">
+    <div class="stage-title">Select One Division Winner from Each Division</div>
+    <!-- Division Sections Here (re-insert your stage 1 code with correct structure) -->
+  </div>
+  <div id="stage2">
+    <div class="stage-title">Select 5 Wildcard Teams</div>
+    <!-- Wildcard Selection Grid Here -->
+  </div>
+
+  <div class="button-container">
+    <button id="continueBtn">Continue to Wildcards</button>
+    <button id="backBtn" style="display: none;">Back to Division Winners</button>
+  </div>
+
+  <script>
+    // Placeholder for your JavaScript logic to toggle between stages
+    const continueBtn = document.getElementById("continueBtn");
+    const backBtn = document.getElementById("backBtn");
+    const stage1 = document.getElementById("stage1");
+    const stage2 = document.getElementById("stage2");
+
+    continueBtn.addEventListener("click", () => {
+      stage1.style.display = "none";
+      stage2.style.display = "block";
+      continueBtn.style.display = "none";
+      backBtn.style.display = "inline-block";
+    });
+
+    backBtn.addEventListener("click", () => {
+      stage1.style.display = "block";
+      stage2.style.display = "none";
+      continueBtn.style.display = "inline-block";
+      backBtn.style.display = "none";
+    });
+  </script>
+</body>
+</html>
